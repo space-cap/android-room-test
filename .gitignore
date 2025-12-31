@@ -1,0 +1,46 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Android specific
+*.apk
+*.aab
+*.dex
+*.class
+
+# Generated files
+bin/
+gen/
+out/
+/app/build
+.kotlin/
+
+# IDE specific
+.idea/tasks.xml
+.idea/gradle.xml
+.idea/dictionaries
+
+# Log files
+*.log
+
+# Keystore files
+*.jks
+*.keystore
+*.pem
+*.p12
+*.key
+
+# Google Services
+google-services.json
