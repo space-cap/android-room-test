@@ -46,9 +46,9 @@ import com.ezlevup.roomtest.domain.User
 @Composable
 fun HomeScreen(
         modifier: Modifier = Modifier,
-        viewModel: UserViewModel = viewModel(factory = UserViewModel.Factory)
+        viewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory)
 ) {
-    val users by viewModel.users.collectAsState()
+    val state by viewModel.state.collectAsState()
     var showDialog by remember { mutableStateOf(false) }
     var selectedUser by remember { mutableStateOf<User?>(null) } // For Edit
 
@@ -71,7 +71,7 @@ fun HomeScreen(
                     modifier = Modifier.padding(bottom = 16.dp)
             )
 
-            if (users.isEmpty()) {
+            if (state.users.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text(text = "No users found. Add one!")
                 }
@@ -80,7 +80,7 @@ fun HomeScreen(
                         modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    items(users) { user ->
+                    items(state.users) { user ->
                         UserItem(
                                 user = user,
                                 onDelete = { viewModel.deleteUser(user) },
