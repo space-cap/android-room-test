@@ -45,30 +45,30 @@ import com.ezlevup.roomtest.domain.User
 
 @Composable
 fun HomeScreen(
-        modifier: Modifier = Modifier,
-        viewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory)
+    modifier: Modifier = Modifier,
+    viewModel: UserViewModel = viewModel(factory = UserViewModel.Factory)
 ) {
     val state by viewModel.state.collectAsState()
     var showDialog by remember { mutableStateOf(false) }
     var selectedUser by remember { mutableStateOf<User?>(null) } // For Edit
 
     Scaffold(
-            modifier = modifier.fillMaxSize(),
-            floatingActionButton = {
-                FloatingActionButton(
-                        onClick = {
-                            selectedUser = null // Reset for add
-                            showDialog = true
-                        }
-                ) { Icon(imageVector = Icons.Default.Add, contentDescription = "Add User") }
-            }
+        modifier = modifier.fillMaxSize(),
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    selectedUser = null // Reset for add
+                    showDialog = true
+                }
+            ) { Icon(imageVector = Icons.Filled.Add, contentDescription = "Add User") }
+        }
     ) { innerPadding ->
         Column(modifier = Modifier.fillMaxSize().padding(innerPadding).padding(16.dp)) {
             Text(
-                    text = "User List",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                text = "User List",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 16.dp)
             )
 
             if (state.users.isEmpty()) {
@@ -77,17 +77,17 @@ fun HomeScreen(
                 }
             } else {
                 LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(state.users) { user ->
                         UserItem(
-                                user = user,
-                                onDelete = { viewModel.deleteUser(user) },
-                                onEdit = {
-                                    selectedUser = user
-                                    showDialog = true
-                                }
+                            user = user,
+                            onDelete = { viewModel.deleteUser(user) },
+                            onEdit = {
+                                selectedUser = user
+                                showDialog = true
+                            }
                         )
                     }
                 }
@@ -96,16 +96,16 @@ fun HomeScreen(
 
         if (showDialog) {
             UserDialog(
-                    user = selectedUser,
-                    onDismiss = { showDialog = false },
-                    onConfirm = { name, age ->
-                        if (selectedUser == null) {
-                            viewModel.addUser(name, age)
-                        } else {
-                            viewModel.updateUser(selectedUser!!.copy(name = name, age = age))
-                        }
-                        showDialog = false
+                user = selectedUser,
+                onDismiss = { showDialog = false },
+                onConfirm = { name, age ->
+                    if (selectedUser == null) {
+                        viewModel.addUser(name, age)
+                    } else {
+                        viewModel.updateUser(selectedUser!!.copy(name = name, age = age))
                     }
+                    showDialog = false
+                }
             )
         }
     }
@@ -114,13 +114,13 @@ fun HomeScreen(
 @Composable
 fun UserItem(user: User, onDelete: () -> Unit, onEdit: () -> Unit) {
     Card(
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-            modifier = Modifier.fillMaxWidth().clickable { onEdit() }
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        modifier = Modifier.fillMaxWidth().clickable { onEdit() }
     ) {
         Row(
-                modifier = Modifier.fillMaxWidth().padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Column {
                 Text(text = user.name, fontSize = 18.sp, fontWeight = FontWeight.Bold)
@@ -128,9 +128,9 @@ fun UserItem(user: User, onDelete: () -> Unit, onEdit: () -> Unit) {
             }
             IconButton(onClick = onDelete) {
                 Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = "Delete",
-                        tint = Color.Red
+                    imageVector = Icons.Filled.Delete,
+                    contentDescription = "Delete",
+                    tint = Color.Red
                 )
             }
         }
@@ -144,49 +144,49 @@ fun UserDialog(user: User?, onDismiss: () -> Unit, onConfirm: (String, Int) -> U
     var isError by remember { mutableStateOf(false) }
 
     AlertDialog(
-            onDismissRequest = onDismiss,
-            title = { Text(text = if (user == null) "Add User" else "Edit User") },
-            text = {
-                Column {
-                    OutlinedTextField(
-                            value = name,
-                            onValueChange = { name = it },
-                            label = { Text("Name") },
-                            modifier = Modifier.fillMaxWidth()
+        onDismissRequest = onDismiss,
+        title = { Text(text = if (user == null) "Add User" else "Edit User") },
+        text = {
+            Column {
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    label = { Text("Name") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
+                    value = age,
+                    onValueChange = {
+                        if (it.all { char -> char.isDigit() }) {
+                            age = it
+                        }
+                    },
+                    label = { Text("Age") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier.fillMaxWidth()
+                )
+                if (isError) {
+                    Text(
+                        text = "Please enter valid name and age",
+                        color = Color.Red,
+                        fontSize = 12.sp,
+                        modifier = Modifier.padding(top = 4.dp)
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    OutlinedTextField(
-                            value = age,
-                            onValueChange = {
-                                if (it.all { char -> char.isDigit() }) {
-                                    age = it
-                                }
-                            },
-                            label = { Text("Age") },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                            modifier = Modifier.fillMaxWidth()
-                    )
-                    if (isError) {
-                        Text(
-                                text = "Please enter valid name and age",
-                                color = Color.Red,
-                                fontSize = 12.sp,
-                                modifier = Modifier.padding(top = 4.dp)
-                        )
+                }
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    if (name.isNotBlank() && age.isNotBlank()) {
+                        onConfirm(name, age.toInt())
+                    } else {
+                        isError = true
                     }
                 }
-            },
-            confirmButton = {
-                Button(
-                        onClick = {
-                            if (name.isNotBlank() && age.isNotBlank()) {
-                                onConfirm(name, age.toInt())
-                            } else {
-                                isError = true
-                            }
-                        }
-                ) { Text("Save") }
-            },
-            dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } }
+            ) { Text("Save") }
+        },
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } }
     )
 }

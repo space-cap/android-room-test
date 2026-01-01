@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class HomeViewModel(private val userRepository: UserRepository) : ViewModel() {
+class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
     private val _state = MutableStateFlow(HomeState())
     val state = _state.asStateFlow()
 
@@ -42,7 +42,7 @@ class HomeViewModel(private val userRepository: UserRepository) : ViewModel() {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[APPLICATION_KEY] as RoomTestApplication)
-                HomeViewModel(application.userRepository)
+                UserViewModel(application.userRepository)
             }
         }
     }
